@@ -279,7 +279,7 @@ export default function VendorsDashboard({ filters }: { filters?: any }) {
             <CardHeader>
               <CardTitle>Vendor Directory</CardTitle>
               <CardDescription>
-                Complete list of all vendors and their status
+                Complete list of all vendors and their status for {filters?.dateRange || '2014'}
               </CardDescription>
             </CardHeader>
             <CardContent>

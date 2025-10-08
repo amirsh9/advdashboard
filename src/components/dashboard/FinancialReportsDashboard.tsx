@@ -202,7 +202,7 @@ export default function FinancialReportsDashboard({ filters }: { filters?: any }
         <div>
           <h2 className="text-3xl font-bold tracking-tight">Financial Reports</h2>
           <p className="text-muted-foreground">
-            Comprehensive financial analysis and reporting
+            Comprehensive financial analysis and reporting for {filters?.dateRange || '2014'}
           </p>
         </div>
         <Button variant="outline" size="sm" onClick={handleRefresh}>
@@ -284,7 +284,7 @@ export default function FinancialReportsDashboard({ filters }: { filters?: any }
               <CardHeader>
                 <CardTitle>Monthly Financial Performance</CardTitle>
                 <CardDescription>
-                  Revenue, expenses, and net income trends
+                  Revenue, expenses, and net income trends for {filters?.dateRange || '2014'}
                 </CardDescription>
               </CardHeader>
               <CardContent>
@@ -315,7 +315,7 @@ export default function FinancialReportsDashboard({ filters }: { filters?: any }
               <CardHeader>
                 <CardTitle>Key Financial Metrics</CardTitle>
                 <CardDescription>
-                  Important financial performance indicators
+                  Important financial performance indicators for {filters?.dateRange || '2014'}
                 </CardDescription>
               </CardHeader>
               <CardContent>
@@ -356,7 +356,7 @@ export default function FinancialReportsDashboard({ filters }: { filters?: any }
             <CardHeader>
               <CardTitle>Expense Categories</CardTitle>
               <CardDescription>
-                Breakdown of expenses by category
+                Breakdown of expenses by category for {filters?.dateRange || '2014'}
               </CardDescription>
             </CardHeader>
             <CardContent>
@@ -392,7 +392,7 @@ export default function FinancialReportsDashboard({ filters }: { filters?: any }
             <CardHeader>
               <CardTitle>Revenue Streams</CardTitle>
               <CardDescription>
-                Breakdown of revenue by source
+                Breakdown of revenue by source for {filters?.dateRange || '2014'}
               </CardDescription>
             </CardHeader>
             <CardContent>
@@ -428,7 +428,7 @@ export default function FinancialReportsDashboard({ filters }: { filters?: any }
             <CardHeader>
               <CardTitle>Recent Financial Reports</CardTitle>
               <CardDescription>
-                Generated financial reports and statements
+                Generated financial reports and statements for {filters?.dateRange || '2014'}
               </CardDescription>
             </CardHeader>
             <CardContent>

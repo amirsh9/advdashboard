@@ -298,7 +298,7 @@ export default function VendorPerformanceDashboard({ filters }: { filters?: any 
             <CardHeader>
               <CardTitle>Top Performing Vendors</CardTitle>
               <CardDescription>
-                Vendors with highest performance ratings
+                Vendors with highest performance ratings for {filters?.dateRange || '2014'}
               </CardDescription>
             </CardHeader>
             <CardContent>

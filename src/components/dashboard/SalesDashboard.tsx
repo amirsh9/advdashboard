@@ -107,6 +107,7 @@ export default function SalesDashboard({ filters }: { filters?: any }) {
         ? `/api/dashboard/sales?${queryParams.toString()}`
         : '/api/dashboard/sales';
         
+      console.log('fetchSalesData calling URL:', url);
       const response = await fetch(url);
       const result = await response.json();
       
@@ -124,6 +125,7 @@ export default function SalesDashboard({ filters }: { filters?: any }) {
   };
 
   useEffect(() => {
+    console.log('SalesDashboard useEffect called with filters:', filters);
     fetchSalesData(filters);
   }, [filters]);
 

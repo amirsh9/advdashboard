@@ -281,7 +281,7 @@ export default function PurchaseOrdersDashboard({ filters }: { filters?: any }) 
             <CardHeader>
               <CardTitle>Recent Purchase Orders</CardTitle>
               <CardDescription>
-                Latest purchase orders and their status
+                Latest purchase orders and their status for {filters?.dateRange || '2014'}
               </CardDescription>
             </CardHeader>
             <CardContent>

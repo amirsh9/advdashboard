@@ -1,6 +1,6 @@
 'use client'
 
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { Button } from '@/components/ui/button'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { Badge } from '@/components/ui/badge'
@@ -28,9 +28,10 @@ import {
 interface FilterProps {
   onFiltersChange: (filters: any) => void
   dashboardType: string
+  initialFilters?: any
 }
 
-export function DashboardFilters({ onFiltersChange, dashboardType }: FilterProps) {
+export function DashboardFilters({ onFiltersChange, dashboardType, initialFilters }: FilterProps) {
   const [isExpanded, setIsExpanded] = useState(false)
   const [activeFilters, setActiveFilters] = useState({
     dateRange: '2014',
@@ -38,7 +39,8 @@ export function DashboardFilters({ onFiltersChange, dashboardType }: FilterProps
     territory: 'all',
     category: 'all',
     vendor: 'all',
-    status: 'all'
+    status: 'all',
+    ...initialFilters
   })
   const [tempFilters, setTempFilters] = useState({
     dateRange: '2014',
@@ -46,8 +48,17 @@ export function DashboardFilters({ onFiltersChange, dashboardType }: FilterProps
     territory: 'all',
     category: 'all',
     vendor: 'all',
-    status: 'all'
+    status: 'all',
+    ...initialFilters
   })
+  
+  // Update tempFilters when initialFilters change
+  useEffect(() => {
+    if (initialFilters) {
+      setTempFilters(prev => ({ ...prev, ...initialFilters }))
+      setActiveFilters(prev => ({ ...prev, ...initialFilters }))
+    }
+  }, [initialFilters])
 
   const handleFilterChange = (key: string, value: string) => {
     const newFilters = { ...tempFilters, [key]: value }
@@ -55,19 +66,12 @@ export function DashboardFilters({ onFiltersChange, dashboardType }: FilterProps
   }
 
   const applyFilters = () => {
+    console.log('applyFilters called with:', tempFilters)
     setActiveFilters(tempFilters)
     onFiltersChange(tempFilters)
   }
 
   const clearFilters = () => {
-    const defaultFilters = {
-      dateRange: '2014',
-      department: 'all',
-      territory: 'all',
-      category: 'all',
-      vendor: 'all',
-      status: 'all'
-    }
     setActiveFilters(defaultFilters)
     setTempFilters(defaultFilters)
     onFiltersChange(defaultFilters)

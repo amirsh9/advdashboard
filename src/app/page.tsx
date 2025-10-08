@@ -1073,6 +1073,7 @@ export default function AdventureWorksDashboard() {
   const [isLoadingOverview, setIsLoadingOverview] = useState(true)
 
   const handleFiltersChange = (newFilters: any) => {
+    console.log('handleFiltersChange called with:', newFilters)
     setFilters(newFilters)
   }
 

@@ -163,7 +163,7 @@ export default function SalesAnalyticsDashboard({ filters }: { filters?: any }) 
       <div className="flex items-center justify-between">
         <div>
           <h1 className="text-3xl font-bold text-gray-900">Sales Analytics</h1>
-          <p className="text-gray-600 mt-1">Comprehensive sales performance analysis</p>
+          <p className="text-gray-600 mt-1">Comprehensive sales performance analysis for {filters?.dateRange || '2014'}</p>
         </div>
         <Button onClick={handleRefresh}>
           Refresh Data
@@ -234,7 +234,7 @@ export default function SalesAnalyticsDashboard({ filters }: { filters?: any }) 
               <BarChart3 className="w-5 h-5 mr-2" />
               Monthly Sales Trend
             </CardTitle>
-            <CardDescription>Revenue performance over time</CardDescription>
+            <CardDescription>Revenue performance for {filters?.dateRange || '2014'}</CardDescription>
           </CardHeader>
           <CardContent>
             <div className="space-y-4">
@@ -264,7 +264,7 @@ export default function SalesAnalyticsDashboard({ filters }: { filters?: any }) 
         <Card>
           <CardHeader>
             <CardTitle>Top Products</CardTitle>
-            <CardDescription>Best performing products by revenue</CardDescription>
+            <CardDescription>Best performing products by revenue in {filters?.dateRange || '2014'}</CardDescription>
           </CardHeader>
           <CardContent>
             <div className="space-y-4">
@@ -300,7 +300,7 @@ export default function SalesAnalyticsDashboard({ filters }: { filters?: any }) 
         <Card>
           <CardHeader>
             <CardTitle>Sales by Region</CardTitle>
-            <CardDescription>Revenue distribution across regions</CardDescription>
+            <CardDescription>Revenue distribution across regions for {filters?.dateRange || '2014'}</CardDescription>
           </CardHeader>
           <CardContent>
             <div className="space-y-4">
@@ -331,7 +331,7 @@ export default function SalesAnalyticsDashboard({ filters }: { filters?: any }) 
         <Card>
           <CardHeader>
             <CardTitle>Customer Segments</CardTitle>
-            <CardDescription>Performance by customer type</CardDescription>
+            <CardDescription>Performance by customer type for {filters?.dateRange || '2014'}</CardDescription>
           </CardHeader>
           <CardContent>
             <div className="space-y-4">

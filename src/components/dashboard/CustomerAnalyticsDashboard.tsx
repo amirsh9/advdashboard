@@ -231,7 +231,7 @@ export default function CustomerAnalyticsDashboard({ filters }: { filters?: any 
             <Card>
               <CardHeader>
                 <CardTitle>Customer Segments</CardTitle>
-                <CardDescription>Performance by customer segment</CardDescription>
+                <CardDescription>Performance by customer segment for {filters?.dateRange || '2014'}</CardDescription>
               </CardHeader>
               <CardContent>
                 <div className="space-y-4">
@@ -266,7 +266,7 @@ export default function CustomerAnalyticsDashboard({ filters }: { filters?: any 
             <Card>
               <CardHeader>
                 <CardTitle>Regional Performance</CardTitle>
-                <CardDescription>Customer distribution by region</CardDescription>
+                <CardDescription>Customer distribution by region for {filters?.dateRange || '2014'}</CardDescription>
               </CardHeader>
               <CardContent>
                 <div className="space-y-4">
@@ -420,7 +420,7 @@ export default function CustomerAnalyticsDashboard({ filters }: { filters?: any 
           <Card>
             <CardHeader>
               <CardTitle>Top Customers by Revenue</CardTitle>
-              <CardDescription>Highest-value customers and their performance metrics</CardDescription>
+              <CardDescription>Highest-value customers and their performance metrics for {filters?.dateRange || '2014'}</CardDescription>
             </CardHeader>
             <CardContent>
               <div className="space-y-4">

@@ -218,7 +218,7 @@ export default function ProductListDashboard({ filters }: { filters?: any }) {
       <Card>
         <CardHeader>
           <CardTitle>Product Catalog</CardTitle>
-          <CardDescription>Browse and manage your product inventory</CardDescription>
+          <CardDescription>Browse and manage your product inventory for {filters?.dateRange || '2014'}</CardDescription>
         </CardHeader>
         <CardContent>
           <div className="flex flex-col md:flex-row gap-4 mb-6">

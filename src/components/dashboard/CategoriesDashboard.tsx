@@ -263,7 +263,7 @@ export default function CategoriesDashboard({ filters }: { filters?: any }) {
           <Card>
             <CardHeader>
               <CardTitle>Category Performance Comparison</CardTitle>
-              <CardDescription>Sales and growth metrics by category</CardDescription>
+              <CardDescription>Sales and growth metrics by category for {filters?.dateRange || '2014'}</CardDescription>
             </CardHeader>
             <CardContent>
               <div className="space-y-6">
@@ -318,7 +318,7 @@ export default function CategoriesDashboard({ filters }: { filters?: any }) {
                   {category.Name} Subcategories
                 </CardTitle>
                 <CardDescription>
-                  Performance breakdown by subcategory
+                  Performance breakdown by subcategory for {filters?.dateRange || '2014'}
                 </CardDescription>
               </CardHeader>
               <CardContent>
