@@ -142,7 +142,7 @@ export default function ProductDashboard({ filters }: { filters?: any }) {
         <div>
           <h2 className="text-3xl font-bold tracking-tight">Product Dashboard</h2>
           <p className="text-muted-foreground">
-            Monitor product performance, inventory, and sales metrics
+            Monitor product performance, inventory, and sales metrics for {filters?.dateRange || '2014'}
           </p>
         </div>
         <Button onClick={fetchProductData} variant="outline" size="sm">
@@ -270,7 +270,7 @@ export default function ProductDashboard({ filters }: { filters?: any }) {
             <CardHeader>
               <CardTitle>Product Inventory Levels</CardTitle>
               <CardDescription>
-                Current inventory levels across all locations
+                Current inventory levels across all locations for {filters?.dateRange || '2014'}
               </CardDescription>
             </CardHeader>
             <CardContent>
@@ -306,7 +306,7 @@ export default function ProductDashboard({ filters }: { filters?: any }) {
             <CardHeader>
               <CardTitle>Most Expensive Products</CardTitle>
               <CardDescription>
-                Products with the highest list prices
+                Products with the highest list prices in {filters?.dateRange || '2014'}
               </CardDescription>
             </CardHeader>
             <CardContent>
@@ -344,7 +344,7 @@ export default function ProductDashboard({ filters }: { filters?: any }) {
             <CardHeader>
               <CardTitle>Product Sales Performance</CardTitle>
               <CardDescription>
-                Top performing products by revenue
+                Top performing products by revenue in {filters?.dateRange || '2014'}
               </CardDescription>
             </CardHeader>
             <CardContent>
@@ -384,7 +384,7 @@ export default function ProductDashboard({ filters }: { filters?: any }) {
             <CardHeader>
               <CardTitle>Low Stock Alert</CardTitle>
               <CardDescription>
-                Products with inventory below safety stock levels
+                Products with inventory below safety stock levels for {filters?.dateRange || '2014'}
               </CardDescription>
             </CardHeader>
             <CardContent>

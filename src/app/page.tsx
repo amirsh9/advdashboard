@@ -1069,10 +1069,42 @@ export default function AdventureWorksDashboard() {
     vendor: 'all',
     status: 'all'
   })
+  const [overviewData, setOverviewData] = useState<any>(null)
+  const [isLoadingOverview, setIsLoadingOverview] = useState(true)
 
   const handleFiltersChange = (newFilters: any) => {
     setFilters(newFilters)
   }
+
+  // Fetch overview data
+  useEffect(() => {
+    const fetchOverviewData = async () => {
+      try {
+        setIsLoadingOverview(true)
+        const queryParams = new URLSearchParams()
+        
+        if (filters.dateRange && filters.dateRange !== 'all') {
+          queryParams.append('dateRange', filters.dateRange)
+        }
+        
+        const url = queryParams.toString()
+          ? `/api/dashboard/overview?${queryParams.toString()}`
+          : '/api/dashboard/overview'
+          
+        const response = await fetch(url)
+        if (response.ok) {
+          const data = await response.json()
+          setOverviewData(data)
+        }
+      } catch (error) {
+        console.error('Error fetching overview data:', error)
+      } finally {
+        setIsLoadingOverview(false)
+      }
+    }
+
+    fetchOverviewData()
+  }, [filters.dateRange])
 
   // Close year filter dropdown when clicking outside
   useEffect(() => {
@@ -1088,13 +1120,37 @@ export default function AdventureWorksDashboard() {
     }
   }, [isYearFilterOpen])
 
-  // Mock data for demonstration - will be replaced with real API calls (2011-2014 data)
-  const overviewStats = [
-    { title: 'Total Sales (2011-2014)', value: '$45.2M', change: '+18.3%', icon: DollarSign, color: 'text-green-600' },
-    { title: 'Total Orders', value: '121,317', change: '+22.1%', icon: ShoppingCart, color: 'text-blue-600' },
-    { title: 'Active Customers', value: '19,820', change: '+15.7%', icon: Users, color: 'text-purple-600' },
-    { title: 'Products', value: '504', change: '+2.3%', icon: Package, color: 'text-orange-600' },
-  ]
+  // Format overview stats from API data
+  const overviewStats = overviewData ? [
+    {
+      title: `Total Sales ${filters.dateRange === '2011-2014' ? '(2011-2014)' : `(${filters.dateRange})`}`,
+      value: `$${(overviewData.summary.totalSales / 1000000).toFixed(1)}M`,
+      change: '+18.3%',
+      icon: DollarSign,
+      color: 'text-green-600'
+    },
+    {
+      title: 'Total Orders',
+      value: overviewData.summary.totalOrders.toLocaleString(),
+      change: '+22.1%',
+      icon: ShoppingCart,
+      color: 'text-blue-600'
+    },
+    {
+      title: 'Active Customers',
+      value: overviewData.summary.activeCustomers.toLocaleString(),
+      change: '+15.7%',
+      icon: Users,
+      color: 'text-purple-600'
+    },
+    {
+      title: 'Products',
+      value: overviewData.summary.products.toLocaleString(),
+      change: '+2.3%',
+      icon: Package,
+      color: 'text-orange-600'
+    },
+  ] : []
 
   const employeeStats = [
     { title: 'Total Employees', value: '290', change: '+3.1%', icon: Users, color: 'text-blue-600' },
@@ -1103,34 +1159,17 @@ export default function AdventureWorksDashboard() {
     { title: 'Avg Vacation Hours', value: '52', change: '+2.1%', icon: Calendar, color: 'text-purple-600' },
   ]
 
-  const salesPerformance = [
-    { region: 'North America', sales: 5234000, target: 5000000, percentage: 104.7 },
-    { region: 'Europe', sales: 3120000, target: 3500000, percentage: 89.1 },
-    { region: 'Asia', sales: 2890000, target: 3000000, percentage: 96.3 },
-    { region: 'South America', sales: 1170000, target: 1500000, percentage: 78.0 },
-  ]
-
-  const topProducts = [
-    { name: 'Mountain-200 Silver', sales: 1250, revenue: 187500, status: 'hot' },
-    { name: 'Road-150 Red', sales: 980, revenue: 147000, status: 'normal' },
-    { name: 'Touring-1000 Yellow', sales: 750, revenue: 225000, status: 'hot' },
-    { name: 'Sport-100 Helmet', sales: 2100, revenue: 63000, status: 'normal' },
-  ]
-
-  const recentOrders = [
-    { id: 'SO71774', customer: 'Adventure Works', amount: 2340.50, status: 'completed', date: '2024-01-15' },
-    { id: 'SO71773', customer: 'Contoso Ltd', amount: 5670.25, status: 'processing', date: '2024-01-15' },
-    { id: 'SO71772', customer: 'Fabrikam Inc', amount: 1234.75, status: 'pending', date: '2024-01-14' },
-    { id: 'SO71771', customer: 'Litware Corp', amount: 8900.00, status: 'completed', date: '2024-01-14' },
-  ]
+  const salesPerformance = overviewData?.salesPerformance || []
+  const topProducts = overviewData?.topProducts || []
+  const recentOrders = overviewData?.recentOrders || []
 
   const renderContent = () => {
     switch (activeItem) {
       case 'overview':
         return (
           <div className="space-y-6">
-            <DashboardFilters 
-              onFiltersChange={handleFiltersChange} 
+            <DashboardFilters
+              onFiltersChange={handleFiltersChange}
               dashboardType={activeItem}
             />
             
@@ -1138,7 +1177,7 @@ export default function AdventureWorksDashboard() {
             <div className="flex flex-col md:flex-row md:items-center md:justify-between space-y-4 md:space-y-0">
               <div>
                 <h1 className="text-3xl font-bold text-gray-900">Dashboard Overview</h1>
-                <p className="text-gray-600 mt-1">Comprehensive Business Management System (2011-2014)</p>
+                <p className="text-gray-600 mt-1">Comprehensive Business Management System {filters.dateRange === '2011-2014' ? '(2011-2014)' : `(${filters.dateRange})`}</p>
               </div>
               <div className="flex items-center space-x-4">
                 <LiveIndicator />
@@ -1200,131 +1239,228 @@ export default function AdventureWorksDashboard() {
             </div>
 
             {/* Key Metrics */}
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 lg:gap-6">
-              {overviewStats.map((stat, index) => (
-                <Card key={index} className="hover:shadow-md transition-shadow duration-200">
-                  <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-                    <CardTitle className="text-sm font-medium text-gray-600">
-                      {stat.title}
-                    </CardTitle>
-                    <stat.icon className={`h-4 w-4 ${stat.color}`} />
-                  </CardHeader>
-                  <CardContent>
-                    <div className="text-2xl font-bold">{stat.value}</div>
-                    <p className="text-xs text-green-600 mt-1">
-                      {stat.change} from last month
-                    </p>
-                  </CardContent>
-                </Card>
-              ))}
-            </div>
+            {isLoadingOverview ? (
+              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 lg:gap-6">
+                {[...Array(4)].map((_, index) => (
+                  <Card key={index} className="hover:shadow-md transition-shadow duration-200">
+                    <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+                      <div className="h-4 w-24 bg-gray-200 rounded animate-pulse"></div>
+                      <div className="h-4 w-4 bg-gray-200 rounded animate-pulse"></div>
+                    </CardHeader>
+                    <CardContent>
+                      <div className="h-8 w-16 bg-gray-200 rounded animate-pulse mb-2"></div>
+                      <div className="h-3 w-20 bg-gray-200 rounded animate-pulse"></div>
+                    </CardContent>
+                  </Card>
+                ))}
+              </div>
+            ) : (
+              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 lg:gap-6">
+                {overviewStats.map((stat, index) => (
+                  <Card key={index} className="hover:shadow-md transition-shadow duration-200">
+                    <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+                      <CardTitle className="text-sm font-medium text-gray-600">
+                        {stat.title}
+                      </CardTitle>
+                      <stat.icon className={`h-4 w-4 ${stat.color}`} />
+                    </CardHeader>
+                    <CardContent>
+                      <div className="text-2xl font-bold">{stat.value}</div>
+                      <p className="text-xs text-green-600 mt-1">
+                        {stat.change} from last month
+                      </p>
+                    </CardContent>
+                  </Card>
+                ))}
+              </div>
+            )}
 
             {/* Charts Row */}
-            <div className="grid grid-cols-1 xl:grid-cols-2 gap-4 lg:gap-6">
-              <Card className="hover:shadow-md transition-shadow duration-200">
-                <CardHeader>
-                  <CardTitle className="flex items-center text-lg">
-                    <BarChart3 className="w-5 h-5 mr-2" />
-                    Sales Performance by Region
-                  </CardTitle>
-                </CardHeader>
-                <CardContent>
-                  <div className="space-y-4">
-                    {salesPerformance.map((region, index) => (
-                      <div key={index} className="space-y-2">
-                        <div className="flex justify-between text-sm">
-                          <span className="font-medium">{region.region}</span>
-                          <span className="text-gray-600">
-                            ${(region.sales / 1000000).toFixed(1)}M / ${(region.target / 1000000).toFixed(1)}M
-                          </span>
-                        </div>
-                        <div className="w-full bg-gray-200 rounded-full h-2">
-                          <div 
-                            className={`h-2 rounded-full ${
-                              region.percentage >= 100 ? 'bg-green-600' : 
-                              region.percentage >= 80 ? 'bg-yellow-600' : 'bg-red-600'
-                            }`}
-                            style={{ width: `${Math.min(region.percentage, 100)}%` }}
-                          />
-                        </div>
-                        <div className="text-xs text-gray-500">
-                          {region.percentage.toFixed(1)}% of target
-                        </div>
-                      </div>
-                    ))}
-                  </div>
-                </CardContent>
-              </Card>
-
-              <Card className="hover:shadow-md transition-shadow duration-200">
-                <CardHeader>
-                  <CardTitle className="flex items-center text-lg">
-                    <TrendingUp className="w-5 h-5 mr-2" />
-                    Top Products
-                  </CardTitle>
-                </CardHeader>
-                <CardContent>
-                  <div className="space-y-4">
-                    {topProducts.map((product, index) => (
-                      <div key={index} className="flex items-center justify-between">
-                        <div className="flex items-center space-x-3">
-                          <div className="w-8 h-8 bg-gray-100 rounded flex items-center justify-center text-sm font-medium">
-                            {index + 1}
+            {isLoadingOverview ? (
+              <div className="grid grid-cols-1 xl:grid-cols-2 gap-4 lg:gap-6">
+                <Card className="hover:shadow-md transition-shadow duration-200">
+                  <CardHeader>
+                    <div className="h-6 w-48 bg-gray-200 rounded animate-pulse"></div>
+                  </CardHeader>
+                  <CardContent>
+                    <div className="space-y-4">
+                      {[...Array(4)].map((_, index) => (
+                        <div key={index} className="space-y-2">
+                          <div className="flex justify-between">
+                            <div className="h-4 w-24 bg-gray-200 rounded animate-pulse"></div>
+                            <div className="h-4 w-20 bg-gray-200 rounded animate-pulse"></div>
                           </div>
+                          <div className="w-full bg-gray-200 rounded-full h-2">
+                            <div className="h-2 rounded-full bg-gray-300 animate-pulse" style={{ width: '70%' }}></div>
+                          </div>
+                        </div>
+                      ))}
+                    </div>
+                  </CardContent>
+                </Card>
+
+                <Card className="hover:shadow-md transition-shadow duration-200">
+                  <CardHeader>
+                    <div className="h-6 w-32 bg-gray-200 rounded animate-pulse"></div>
+                  </CardHeader>
+                  <CardContent>
+                    <div className="space-y-4">
+                      {[...Array(4)].map((_, index) => (
+                        <div key={index} className="flex items-center justify-between">
+                          <div className="flex items-center space-x-3">
+                            <div className="w-8 h-8 bg-gray-200 rounded animate-pulse"></div>
+                            <div>
+                              <div className="h-4 w-32 bg-gray-200 rounded animate-pulse mb-1"></div>
+                              <div className="h-3 w-24 bg-gray-200 rounded animate-pulse"></div>
+                            </div>
+                          </div>
+                          <div className="text-right">
+                            <div className="h-4 w-16 bg-gray-200 rounded animate-pulse mb-1"></div>
+                            <div className="h-4 w-12 bg-gray-200 rounded animate-pulse"></div>
+                          </div>
+                        </div>
+                      ))}
+                    </div>
+                  </CardContent>
+                </Card>
+              </div>
+            ) : (
+              <div className="grid grid-cols-1 xl:grid-cols-2 gap-4 lg:gap-6">
+                <Card className="hover:shadow-md transition-shadow duration-200">
+                  <CardHeader>
+                    <CardTitle className="flex items-center text-lg">
+                      <BarChart3 className="w-5 h-5 mr-2" />
+                      Sales Performance by Region
+                    </CardTitle>
+                  </CardHeader>
+                  <CardContent>
+                    <div className="space-y-4">
+                      {salesPerformance.map((region, index) => (
+                        <div key={index} className="space-y-2">
+                          <div className="flex justify-between text-sm">
+                            <span className="font-medium">{region.region}</span>
+                            <span className="text-gray-600">
+                              ${(region.sales / 1000000).toFixed(1)}M / ${(region.target / 1000000).toFixed(1)}M
+                            </span>
+                          </div>
+                          <div className="w-full bg-gray-200 rounded-full h-2">
+                            <div
+                              className={`h-2 rounded-full ${
+                                region.percentage >= 100 ? 'bg-green-600' :
+                                region.percentage >= 80 ? 'bg-yellow-600' : 'bg-red-600'
+                              }`}
+                              style={{ width: `${Math.min(region.percentage, 100)}%` }}
+                            />
+                          </div>
+                          <div className="text-xs text-gray-500">
+                            {region.percentage.toFixed(1)}% of target
+                          </div>
+                        </div>
+                      ))}
+                    </div>
+                  </CardContent>
+                </Card>
+
+                <Card className="hover:shadow-md transition-shadow duration-200">
+                  <CardHeader>
+                    <CardTitle className="flex items-center text-lg">
+                      <TrendingUp className="w-5 h-5 mr-2" />
+                      Top Products
+                    </CardTitle>
+                  </CardHeader>
+                  <CardContent>
+                    <div className="space-y-4">
+                      {topProducts.map((product, index) => (
+                        <div key={index} className="flex items-center justify-between">
+                          <div className="flex items-center space-x-3">
+                            <div className="w-8 h-8 bg-gray-100 rounded flex items-center justify-center text-sm font-medium">
+                              {index + 1}
+                            </div>
+                            <div>
+                              <p className="text-sm font-medium">{product.name}</p>
+                              <p className="text-xs text-gray-500">{product.sales} units sold</p>
+                            </div>
+                          </div>
+                          <div className="text-right">
+                            <p className="text-sm font-medium">${product.revenue.toLocaleString()}</p>
+                            {product.status === 'hot' && (
+                              <Badge variant="destructive" className="text-xs">Hot</Badge>
+                            )}
+                          </div>
+                        </div>
+                      ))}
+                    </div>
+                  </CardContent>
+                </Card>
+              </div>
+            )}
+
+            {/* Recent Orders */}
+            {isLoadingOverview ? (
+              <Card>
+                <CardHeader>
+                  <div className="h-6 w-32 bg-gray-200 rounded animate-pulse mb-2"></div>
+                  <div className="h-4 w-48 bg-gray-200 rounded animate-pulse"></div>
+                </CardHeader>
+                <CardContent>
+                  <div className="space-y-4">
+                    {[...Array(5)].map((_, index) => (
+                      <div key={index} className="flex items-center justify-between p-3 bg-gray-50 rounded-lg">
+                        <div className="flex items-center space-x-4">
                           <div>
-                            <p className="text-sm font-medium">{product.name}</p>
-                            <p className="text-xs text-gray-500">{product.sales} units sold</p>
+                            <div className="h-4 w-24 bg-gray-200 rounded animate-pulse mb-1"></div>
+                            <div className="h-3 w-32 bg-gray-200 rounded animate-pulse"></div>
                           </div>
                         </div>
                         <div className="text-right">
-                          <p className="text-sm font-medium">${product.revenue.toLocaleString()}</p>
-                          {product.status === 'hot' && (
-                            <Badge variant="destructive" className="text-xs">Hot</Badge>
-                          )}
+                          <div className="h-4 w-16 bg-gray-200 rounded animate-pulse mb-1"></div>
+                          <div className="flex items-center justify-end space-x-2 mt-1">
+                            <div className="h-4 w-16 bg-gray-200 rounded animate-pulse"></div>
+                            <div className="h-3 w-16 bg-gray-200 rounded animate-pulse"></div>
+                          </div>
                         </div>
                       </div>
                     ))}
                   </div>
                 </CardContent>
               </Card>
-            </div>
-
-            {/* Recent Orders */}
-            <Card>
-              <CardHeader>
-                <CardTitle>Recent Orders</CardTitle>
-                <CardDescription>Latest sales orders from the system</CardDescription>
-              </CardHeader>
-              <CardContent>
-                <div className="space-y-4">
-                  {recentOrders.map((order, index) => (
-                    <div key={index} className="flex items-center justify-between p-3 bg-gray-50 rounded-lg">
-                      <div className="flex items-center space-x-4">
-                        <div>
-                          <p className="font-medium">{order.id}</p>
-                          <p className="text-sm text-gray-600">{order.customer}</p>
+            ) : (
+              <Card>
+                <CardHeader>
+                  <CardTitle>Recent Orders</CardTitle>
+                  <CardDescription>Latest sales orders from the system</CardDescription>
+                </CardHeader>
+                <CardContent>
+                  <div className="space-y-4">
+                    {recentOrders.map((order, index) => (
+                      <div key={index} className="flex items-center justify-between p-3 bg-gray-50 rounded-lg">
+                        <div className="flex items-center space-x-4">
+                          <div>
+                            <p className="font-medium">{order.id}</p>
+                            <p className="text-sm text-gray-600">{order.customer}</p>
+                          </div>
+                        </div>
+                        <div className="text-right">
+                          <p className="font-medium">${order.amount.toFixed(2)}</p>
+                          <div className="flex items-center justify-end space-x-2 mt-1">
+                            <Badge
+                              variant={
+                                order.status === 'completed' ? 'default' :
+                                order.status === 'processing' ? 'secondary' : 'outline'
+                              }
+                              className="text-xs"
+                            >
+                              {order.status}
+                            </Badge>
+                            <span className="text-xs text-gray-500">{order.date}</span>
+                          </div>
                         </div>
                       </div>
-                      <div className="text-right">
-                        <p className="font-medium">${order.amount.toFixed(2)}</p>
-                        <div className="flex items-center justify-end space-x-2 mt-1">
-                          <Badge 
-                            variant={
-                              order.status === 'completed' ? 'default' :
-                              order.status === 'processing' ? 'secondary' : 'outline'
-                            }
-                            className="text-xs"
-                          >
-                            {order.status}
-                          </Badge>
-                          <span className="text-xs text-gray-500">{order.date}</span>
-                        </div>
-                      </div>
-                    </div>
-                  ))}
-                </div>
-              </CardContent>
-            </Card>
+                    ))}
+                  </div>
+                </CardContent>
+              </Card>
+            )}
           </div>
         )
 
@@ -1349,7 +1485,7 @@ export default function AdventureWorksDashboard() {
             
             <div>
               <h1 className="text-3xl font-bold text-gray-900">Sales Orders Management</h1>
-              <p className="text-gray-600 mt-1">Track and manage all sales orders (2011-2014)</p>
+              <p className="text-gray-600 mt-1">Track and manage all sales orders {filters.dateRange === '2011-2014' ? '(2011-2014)' : `(${filters.dateRange})`}</p>
             </div>
             
             <div className="grid grid-cols-1 md:grid-cols-4 gap-6">
@@ -1477,7 +1613,7 @@ export default function AdventureWorksDashboard() {
             
             <div>
               <h1 className="text-3xl font-bold text-gray-900">Customer Management</h1>
-              <p className="text-gray-600 mt-1">Customer relationships and analytics (2011-2014)</p>
+              <p className="text-gray-600 mt-1">Customer relationships and analytics {filters.dateRange === '2011-2014' ? '(2011-2014)' : `(${filters.dateRange})`}</p>
             </div>
             
             <div className="grid grid-cols-1 md:grid-cols-4 gap-6">
@@ -1600,7 +1736,7 @@ export default function AdventureWorksDashboard() {
             
             <div>
               <h1 className="text-3xl font-bold text-gray-900">Inventory Management</h1>
-              <p className="text-gray-600 mt-1">Track inventory levels and warehouse operations (2011-2014)</p>
+              <p className="text-gray-600 mt-1">Track inventory levels and warehouse operations {filters.dateRange === '2011-2014' ? '(2011-2014)' : `(${filters.dateRange})`}</p>
             </div>
             
             <div className="grid grid-cols-1 md:grid-cols-4 gap-6">
@@ -1861,7 +1997,7 @@ export default function AdventureWorksDashboard() {
             
             <div>
               <h1 className="text-3xl font-bold text-gray-900">Financial Management</h1>
-              <p className="text-gray-600 mt-1">Monitor financial performance and manage budgets (2011-2014)</p>
+              <p className="text-gray-600 mt-1">Monitor financial performance and manage budgets {filters.dateRange === '2011-2014' ? '(2011-2014)' : `(${filters.dateRange})`}</p>
             </div>
             
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
@@ -3249,7 +3385,7 @@ export default function AdventureWorksDashboard() {
             
             <div>
               <h1 className="text-3xl font-bold text-gray-900">Vendor Management</h1>
-              <p className="text-gray-600 mt-1">Supplier relationships and performance tracking (2011-2014)</p>
+              <p className="text-gray-600 mt-1">Supplier relationships and performance tracking {filters.dateRange === '2011-2014' ? '(2011-2014)' : `(${filters.dateRange})`}</p>
             </div>
             
             <div className="grid grid-cols-1 md:grid-cols-4 gap-6">
@@ -3378,7 +3514,7 @@ export default function AdventureWorksDashboard() {
             
             <div>
               <h1 className="text-3xl font-bold text-gray-900">Purchase Orders</h1>
-              <p className="text-gray-600 mt-1">Purchase order management and tracking (2011-2014)</p>
+              <p className="text-gray-600 mt-1">Purchase order management and tracking {filters.dateRange === '2011-2014' ? '(2011-2014)' : `(${filters.dateRange})`}</p>
             </div>
             
             <div className="grid grid-cols-1 md:grid-cols-4 gap-6">
@@ -3489,7 +3625,7 @@ export default function AdventureWorksDashboard() {
             
             <div>
               <h1 className="text-3xl font-bold text-gray-900">Vendor Performance Analysis</h1>
-              <p className="text-gray-600 mt-1">Comprehensive supplier performance metrics and analytics (2011-2014)</p>
+              <p className="text-gray-600 mt-1">Comprehensive supplier performance metrics and analytics {filters.dateRange === '2011-2014' ? '(2011-2014)' : `(${filters.dateRange})`}</p>
             </div>
             
             <div className="grid grid-cols-1 md:grid-cols-4 gap-6">
@@ -3651,7 +3787,7 @@ export default function AdventureWorksDashboard() {
             
             <div>
               <h1 className="text-3xl font-bold text-gray-900">Customer Management</h1>
-              <p className="text-gray-600 mt-1">Manage customer relationships and analyze customer data (2011-2014)</p>
+              <p className="text-gray-600 mt-1">Manage customer relationships and analyze customer data {filters.dateRange === '2011-2014' ? '(2011-2014)' : `(${filters.dateRange})`}</p>
             </div>
             
             <div className="grid grid-cols-1 md:grid-cols-4 gap-6">

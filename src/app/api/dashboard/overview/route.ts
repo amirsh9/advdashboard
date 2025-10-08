@@ -1,4 +1,5 @@
-import { sql } from '@vercel/postgres'
+import { NextResponse } from 'next/server'
+import { executeQuery } from '@/lib/mssql'
 
 export async function GET(request: Request) {
   try {
@@ -76,79 +77,71 @@ export async function GET(request: Request) {
     const recentOrdersQuery = `
       SELECT TOP 5
         soh.SalesOrderID,
-        a.AccountNumber as Customer,
+        c.AccountNumber as Customer,
         soh.SubTotal as Amount,
         soh.Status,
         soh.OrderDate
       FROM Sales.SalesOrderHeader soh
       LEFT JOIN Sales.Customer c ON soh.CustomerID = c.CustomerID
-      LEFT JOIN Person.Person p ON c.PersonID = p.BusinessEntityID
-      LEFT JOIN Sales.Store s ON c.StoreID = s.BusinessEntityID
-      LEFT JOIN Sales.SalesTerritory st ON soh.TerritoryID = st.TerritoryID
-      LEFT JOIN Sales.CustomerAddress ca ON c.CustomerID = ca.CustomerID
-      LEFT JOIN Person.Address a ON ca.AddressID = a.AddressID
       WHERE soh.Status IN (1, 2, 3, 4, 5)
         ${dateCondition}
       ORDER BY soh.OrderDate DESC
     `
 
     // Execute queries
-    const totalSalesResult = await sql.query(totalSalesQuery)
-    const salesPerformanceResult = await sql.query(salesPerformanceQuery)
-    const topProductsResult = await sql.query(topProductsQuery)
-    const recentOrdersResult = await sql.query(recentOrdersQuery)
+    const totalSalesResult = await executeQuery(totalSalesQuery)
+    const salesPerformanceResult = await executeQuery(salesPerformanceQuery)
+    const topProductsResult = await executeQuery(topProductsQuery)
+    const recentOrdersResult = await executeQuery(recentOrdersQuery)
 
     // Transform data
-    const totalSalesData = totalSalesResult.rows[0]
-    const salesPerformanceData = salesPerformanceResult.rows
-    const topProductsData = topProductsResult.rows
-    const recentOrdersData = recentOrdersResult.rows
+    const totalSalesData = totalSalesResult[0] || {}
+    const salesPerformanceData = salesPerformanceResult || []
+    const topProductsData = topProductsResult || []
+    const recentOrdersData = recentOrdersResult || []
 
     // Format sales performance
     const salesPerformance = salesPerformanceData.map((row: any) => ({
-      region: row.region,
-      sales: parseFloat(row.sales) || 0,
-      target: parseFloat(row.target) || 0,
-      percentage: row.target > 0 ? ((parseFloat(row.sales) || 0) / parseFloat(row.target) * 100) : 0
+      region: row.Region,
+      sales: parseFloat(row.Sales) || 0,
+      target: parseFloat(row.Target) || 0,
+      percentage: row.Target > 0 ? ((parseFloat(row.Sales) || 0) / parseFloat(row.Target) * 100) : 0
     }))
 
     // Format top products
     const topProducts = topProductsData.map((row: any) => ({
-      name: row.productname,
-      sales: parseInt(row.totalquantity) || 0,
-      revenue: parseFloat(row.revenue) || 0,
-      status: parseFloat(row.revenue) > 150000 ? 'hot' : 'normal'
+      name: row.ProductName,
+      sales: parseInt(row.TotalQuantity) || 0,
+      revenue: parseFloat(row.Revenue) || 0,
+      status: parseFloat(row.Revenue) > 150000 ? 'hot' : 'normal'
     }))
 
     // Format recent orders
     const recentOrders = recentOrdersData.map((row: any) => ({
-      id: row.salesorderid,
-      customer: row.customer || 'Unknown',
-      amount: parseFloat(row.amount) || 0,
-      status: row.status === 5 ? 'completed' : row.status === 3 ? 'processing' : 'pending',
-      date: new Date(row.orderdate).toISOString().split('T')[0]
+      id: row.SalesOrderID,
+      customer: row.Customer || 'Unknown',
+      amount: parseFloat(row.Amount) || 0,
+      status: row.Status === 5 ? 'completed' : row.Status === 3 ? 'processing' : 'pending',
+      date: new Date(row.OrderDate).toISOString().split('T')[0]
     }))
 
-    return new Response(JSON.stringify({
+    return NextResponse.json({
       summary: {
-        totalSales: parseFloat(totalSalesData.totalsales) || 0,
-        totalOrders: parseInt(totalSalesData.totalorders) || 0,
-        activeCustomers: parseInt(totalSalesData.activecustomers) || 0,
-        products: parseInt(totalSalesData.products) || 0
+        totalSales: parseFloat(totalSalesData.TotalSales) || 0,
+        totalOrders: parseInt(totalSalesData.TotalOrders) || 0,
+        activeCustomers: parseInt(totalSalesData.ActiveCustomers) || 0,
+        products: parseInt(totalSalesData.Products) || 0
       },
       salesPerformance,
       topProducts,
       recentOrders
-    }), {
-      status: 200,
-      headers: { 'Content-Type': 'application/json' }
     })
 
   } catch (error) {
     console.error('Error fetching overview data:', error)
-    return new Response(JSON.stringify({ error: 'Failed to fetch overview data' }), {
-      status: 500,
-      headers: { 'Content-Type': 'application/json' }
-    })
+    return NextResponse.json(
+      { error: 'Failed to fetch overview data' },
+      { status: 500 }
+    )
   }
 }

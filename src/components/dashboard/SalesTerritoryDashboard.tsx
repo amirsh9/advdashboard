@@ -168,7 +168,7 @@ export default function SalesTerritoryDashboard({ filters }: { filters?: any }) 
         <div>
           <h2 className="text-3xl font-bold tracking-tight">Sales Territory Dashboard</h2>
           <p className="text-muted-foreground">
-            Monitor sales performance across territories and regions
+            Monitor sales performance across territories and regions for {filters?.dateRange || '2014'}
           </p>
         </div>
         <Button onClick={fetchTerritoryData} variant="outline" size="sm">
@@ -324,7 +324,7 @@ export default function SalesTerritoryDashboard({ filters }: { filters?: any }) 
             <CardHeader>
               <CardTitle>Sales by Country</CardTitle>
               <CardDescription>
-                Performance breakdown by country/region
+                Performance breakdown by country/region for {filters?.dateRange || '2014'}
               </CardDescription>
             </CardHeader>
             <CardContent>
@@ -357,7 +357,7 @@ export default function SalesTerritoryDashboard({ filters }: { filters?: any }) 
             <CardHeader>
               <CardTitle>Sales by Territory Group</CardTitle>
               <CardDescription>
-                Performance breakdown by territory groups
+                Performance breakdown by territory groups for {filters?.dateRange || '2014'}
               </CardDescription>
             </CardHeader>
             <CardContent>
@@ -390,7 +390,7 @@ export default function SalesTerritoryDashboard({ filters }: { filters?: any }) 
             <CardHeader>
               <CardTitle>Top Performing Territories</CardTitle>
               <CardDescription>
-                Territories with highest sales performance this year
+                Territories with highest sales performance in {filters?.dateRange || '2014'}
               </CardDescription>
             </CardHeader>
             <CardContent>
@@ -438,7 +438,7 @@ export default function SalesTerritoryDashboard({ filters }: { filters?: any }) 
             <CardHeader>
               <CardTitle>Sales People Performance</CardTitle>
               <CardDescription>
-                Individual sales performance by territory
+                Individual sales performance by territory for {filters?.dateRange || '2014'}
               </CardDescription>
             </CardHeader>
             <CardContent>

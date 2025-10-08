@@ -195,7 +195,7 @@ export default function SalesDashboard({ filters }: { filters?: any }) {
         <div>
           <h2 className="text-3xl font-bold tracking-tight">Sales Dashboard</h2>
           <p className="text-muted-foreground">
-            Monitor sales performance, customer metrics, and revenue trends
+            Monitor sales performance, customer metrics, and revenue trends for {filters?.dateRange || '2014'}
           </p>
         </div>
         <Button onClick={() => fetchSalesData(filters)} variant="outline" size="sm">
@@ -305,7 +305,7 @@ export default function SalesDashboard({ filters }: { filters?: any }) {
             <Card>
               <CardHeader>
                 <CardTitle>Monthly Sales Trend</CardTitle>
-                <CardDescription>Sales performance over the last 12 months</CardDescription>
+                <CardDescription>Sales performance for {filters?.dateRange || '2014'}</CardDescription>
               </CardHeader>
               <CardContent>
                 <div className="space-y-4">
@@ -340,7 +340,7 @@ export default function SalesDashboard({ filters }: { filters?: any }) {
             <Card>
               <CardHeader>
                 <CardTitle>Sales by Territory</CardTitle>
-                <CardDescription>Revenue distribution across territories</CardDescription>
+                <CardDescription>Revenue distribution across territories for {filters?.dateRange || '2014'}</CardDescription>
               </CardHeader>
               <CardContent>
                 <div className="space-y-4">
@@ -375,7 +375,7 @@ export default function SalesDashboard({ filters }: { filters?: any }) {
           <Card>
             <CardHeader>
               <CardTitle>Top Customers by Revenue</CardTitle>
-              <CardDescription>Customers with highest lifetime value</CardDescription>
+              <CardDescription>Customers with highest lifetime value in {filters?.dateRange || '2014'}</CardDescription>
             </CardHeader>
             <CardContent>
               <div className="space-y-4">
@@ -411,7 +411,7 @@ export default function SalesDashboard({ filters }: { filters?: any }) {
           <Card>
             <CardHeader>
               <CardTitle>Top Products by Revenue</CardTitle>
-              <CardDescription>Products generating the most revenue</CardDescription>
+              <CardDescription>Products generating the most revenue in {filters?.dateRange || '2014'}</CardDescription>
             </CardHeader>
             <CardContent>
               <div className="space-y-4">
@@ -447,7 +447,7 @@ export default function SalesDashboard({ filters }: { filters?: any }) {
           <Card>
             <CardHeader>
               <CardTitle>Sales by Territory</CardTitle>
-              <CardDescription>Performance breakdown by sales territories</CardDescription>
+              <CardDescription>Performance breakdown by sales territories for {filters?.dateRange || '2014'}</CardDescription>
             </CardHeader>
             <CardContent>
               <div className="space-y-4">
@@ -481,7 +481,7 @@ export default function SalesDashboard({ filters }: { filters?: any }) {
           <Card>
             <CardHeader>
               <CardTitle>Recent Sales Orders</CardTitle>
-              <CardDescription>Latest sales transactions</CardDescription>
+              <CardDescription>Latest sales transactions for {filters?.dateRange || '2014'}</CardDescription>
             </CardHeader>
             <CardContent>
               <div className="space-y-4">

@@ -200,7 +200,7 @@ export default function PurchasingDashboard({ filters }: { filters?: any }) {
       <div className="flex flex-col md:flex-row md:items-center md:justify-between space-y-4 md:space-y-0">
         <div>
           <h1 className="text-3xl font-bold text-gray-900">Purchasing & Procurement Dashboard</h1>
-          <p className="text-gray-600 mt-1">Complete vendor management and procurement analysis</p>
+          <p className="text-gray-600 mt-1">Complete vendor management and procurement analysis for {filters?.dateRange || '2014'}</p>
         </div>
         <div className="flex items-center space-x-4">
           <Button onClick={fetchPurchasingData} variant="outline" size="sm">
@@ -301,7 +301,7 @@ export default function PurchasingDashboard({ filters }: { filters?: any }) {
                   <Star className="w-5 h-5 mr-2" />
                   Top Vendors by Spend
                 </CardTitle>
-                <CardDescription>Highest-value supplier relationships</CardDescription>
+                <CardDescription>Highest-value supplier relationships in {filters?.dateRange || '2014'}</CardDescription>
               </CardHeader>
               <CardContent>
                 <div className="space-y-4">
@@ -337,7 +337,7 @@ export default function PurchasingDashboard({ filters }: { filters?: any }) {
                   <FileText className="w-5 h-5 mr-2" />
                   Pending Purchase Orders
                 </CardTitle>
-                <CardDescription>Orders requiring attention</CardDescription>
+                <CardDescription>Orders requiring attention in {filters?.dateRange || '2014'}</CardDescription>
               </CardHeader>
               <CardContent>
                 <div className="space-y-4">
@@ -378,7 +378,7 @@ export default function PurchasingDashboard({ filters }: { filters?: any }) {
                 <TrendingUp className="w-5 h-5 mr-2" />
                 Monthly Purchasing Trend
               </CardTitle>
-              <CardDescription>Purchasing volume over the last 12 months</CardDescription>
+              <CardDescription>Purchasing volume for {filters?.dateRange || '2014'}</CardDescription>
             </CardHeader>
             <CardContent>
               <div className="space-y-4">
@@ -415,7 +415,7 @@ export default function PurchasingDashboard({ filters }: { filters?: any }) {
           <Card>
             <CardHeader>
               <CardTitle>Vendor Performance Analysis</CardTitle>
-              <CardDescription>Top vendors by purchase volume and value</CardDescription>
+              <CardDescription>Top vendors by purchase volume and value for {filters?.dateRange || '2014'}</CardDescription>
             </CardHeader>
             <CardContent>
               <div className="space-y-4">
@@ -468,7 +468,7 @@ export default function PurchasingDashboard({ filters }: { filters?: any }) {
           <Card>
             <CardHeader>
               <CardTitle>Purchase Order Management</CardTitle>
-              <CardDescription>Complete order tracking and management</CardDescription>
+              <CardDescription>Complete order tracking and management for {filters?.dateRange || '2014'}</CardDescription>
             </CardHeader>
             <CardContent>
               <div className="space-y-4">
@@ -518,7 +518,7 @@ export default function PurchasingDashboard({ filters }: { filters?: any }) {
           <Card>
             <CardHeader>
               <CardTitle>Most Ordered Products</CardTitle>
-              <CardDescription>Products with highest purchase frequency and volume</CardDescription>
+              <CardDescription>Products with highest purchase frequency and volume in {filters?.dateRange || '2014'}</CardDescription>
             </CardHeader>
             <CardContent>
               <div className="space-y-4">
@@ -556,7 +556,7 @@ export default function PurchasingDashboard({ filters }: { filters?: any }) {
           <Card>
             <CardHeader>
               <CardTitle>Purchasing by Employee</CardTitle>
-              <CardDescription>Purchase activity by procurement team members</CardDescription>
+              <CardDescription>Purchase activity by procurement team members for {filters?.dateRange || '2014'}</CardDescription>
             </CardHeader>
             <CardContent>
               <div className="space-y-4">

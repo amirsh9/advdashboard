@@ -196,7 +196,7 @@ const InventoryDashboard: React.FC<{ filters?: any }> = ({ filters }) => {
       <div className="flex items-center justify-between">
         <div>
           <h1 className="text-3xl font-bold text-gray-900">Inventory Management</h1>
-          <p className="text-gray-600 mt-1">Monitor stock levels, warehouse status, and inventory alerts</p>
+          <p className="text-gray-600 mt-1">Monitor stock levels, warehouse status, and inventory alerts for {filters?.dateRange || '2014'}</p>
         </div>
         <div className="flex gap-2">
           <Button onClick={fetchInventoryData} variant="outline" size="sm">
@@ -350,7 +350,7 @@ const InventoryDashboard: React.FC<{ filters?: any }> = ({ filters }) => {
             <Card>
               <CardHeader>
                 <CardTitle>Inventory by Location</CardTitle>
-                <CardDescription>Product distribution across warehouse locations</CardDescription>
+                <CardDescription>Product distribution across warehouse locations for {filters?.dateRange || '2014'}</CardDescription>
               </CardHeader>
               <CardContent>
                 <div className="space-y-4">
@@ -377,7 +377,7 @@ const InventoryDashboard: React.FC<{ filters?: any }> = ({ filters }) => {
             <Card>
               <CardHeader>
                 <CardTitle>Inventory Value by Location</CardTitle>
-                <CardDescription>Total inventory value by location</CardDescription>
+                <CardDescription>Total inventory value by location for {filters?.dateRange || '2014'}</CardDescription>
               </CardHeader>
               <CardContent>
                 <div className="space-y-4">
@@ -479,7 +479,7 @@ const InventoryDashboard: React.FC<{ filters?: any }> = ({ filters }) => {
           <Card>
             <CardHeader>
               <CardTitle>Low Stock Items</CardTitle>
-              <CardDescription>Products that need immediate reordering</CardDescription>
+              <CardDescription>Products that need immediate reordering for {filters?.dateRange || '2014'}</CardDescription>
             </CardHeader>
             <CardContent>
               <div className="space-y-4">
@@ -518,7 +518,7 @@ const InventoryDashboard: React.FC<{ filters?: any }> = ({ filters }) => {
           <Card>
             <CardHeader>
               <CardTitle>High Stock Items</CardTitle>
-              <CardDescription>Products with excess inventory levels</CardDescription>
+              <CardDescription>Products with excess inventory levels for {filters?.dateRange || '2014'}</CardDescription>
             </CardHeader>
             <CardContent>
               <div className="space-y-4">
@@ -553,7 +553,7 @@ const InventoryDashboard: React.FC<{ filters?: any }> = ({ filters }) => {
           <Card>
             <CardHeader>
               <CardTitle>Inventory by Category</CardTitle>
-              <CardDescription>Product distribution and inventory levels by category</CardDescription>
+              <CardDescription>Product distribution and inventory levels by category for {filters?.dateRange || '2014'}</CardDescription>
             </CardHeader>
             <CardContent>
               <div className="space-y-4">

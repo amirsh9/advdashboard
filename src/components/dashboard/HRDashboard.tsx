@@ -158,7 +158,7 @@ export default function HRDashboard({ filters }: { filters?: any }) {
       <div className="flex flex-col md:flex-row md:items-center md:justify-between space-y-4 md:space-y-0">
         <div>
           <h1 className="text-3xl font-bold text-gray-900">Human Resources Dashboard</h1>
-          <p className="text-gray-600 mt-1">Complete HR management and analytics</p>
+          <p className="text-gray-600 mt-1">Complete HR management and analytics for {filters?.dateRange || '2014'}</p>
         </div>
         <Button onClick={fetchHRData} variant="outline" size="sm">
           <RefreshCw className="h-4 w-4 mr-2" />
@@ -336,7 +336,7 @@ export default function HRDashboard({ filters }: { filters?: any }) {
                   <UserCheck className="w-5 h-5 mr-2" />
                   Recent Hires
                 </CardTitle>
-                <CardDescription>Latest employee additions</CardDescription>
+                <CardDescription>Latest employee additions in {filters?.dateRange || '2014'}</CardDescription>
               </CardHeader>
               <CardContent>
                 <div className="space-y-4">
@@ -372,7 +372,7 @@ export default function HRDashboard({ filters }: { filters?: any }) {
                   <Calendar className="w-5 h-5 mr-2" />
                   Most Vacation Hours
                 </CardTitle>
-                <CardDescription>Employees with highest vacation balance</CardDescription>
+                <CardDescription>Employees with highest vacation balance in {filters?.dateRange || '2014'}</CardDescription>
               </CardHeader>
               <CardContent>
                 <div className="space-y-4">
@@ -409,7 +409,7 @@ export default function HRDashboard({ filters }: { filters?: any }) {
                 <Building className="w-5 h-5 mr-2" />
                 Department Overview
               </CardTitle>
-              <CardDescription>Employee distribution and leave balance by department</CardDescription>
+              <CardDescription>Employee distribution and leave balance by department for {filters?.dateRange || '2014'}</CardDescription>
             </CardHeader>
             <CardContent>
               <div className="space-y-6">
@@ -452,7 +452,7 @@ export default function HRDashboard({ filters }: { filters?: any }) {
           <Card>
             <CardHeader>
               <CardTitle>Job Titles Distribution</CardTitle>
-              <CardDescription>Employee distribution by job titles</CardDescription>
+              <CardDescription>Employee distribution by job titles for {filters?.dateRange || '2014'}</CardDescription>
             </CardHeader>
             <CardContent>
               <div className="space-y-4">
@@ -484,7 +484,7 @@ export default function HRDashboard({ filters }: { filters?: any }) {
                 <Clock className="w-5 h-5 mr-2" />
                 Shift Distribution
               </CardTitle>
-              <CardDescription>Employee distribution across work shifts</CardDescription>
+              <CardDescription>Employee distribution across work shifts for {filters?.dateRange || '2014'}</CardDescription>
             </CardHeader>
             <CardContent>
               <div className="space-y-4">
@@ -513,7 +513,7 @@ export default function HRDashboard({ filters }: { filters?: any }) {
           <Card>
             <CardHeader>
               <CardTitle>Recent Hires</CardTitle>
-              <CardDescription>Latest employee additions in the last 6 months</CardDescription>
+              <CardDescription>Latest employee additions in {filters?.dateRange || '2014'}</CardDescription>
             </CardHeader>
             <CardContent>
               <div className="space-y-4">
