@@ -191,7 +191,7 @@ export default function SalesAnalyticsDashboard({ filters }: { filters?: any }) 
             <ShoppingCart className="h-4 w-4 text-blue-600" />
           </CardHeader>
           <CardContent>
-            <div className="text-2xl font-bold">{data.summary.totalOrders.toLocaleString()}</div>
+            <div className="text-2xl font-bold">{(data.summary.totalOrders || 0).toLocaleString()}</div>
             <p className="text-xs text-blue-600 flex items-center mt-1">
               <ArrowUpRight className="h-3 w-3 mr-1" />
               +8.2% from last period
@@ -204,7 +204,7 @@ export default function SalesAnalyticsDashboard({ filters }: { filters?: any }) 
             <Target className="h-4 w-4 text-purple-600" />
           </CardHeader>
           <CardContent>
-            <div className="text-2xl font-bold">${data.summary.averageOrderValue.toFixed(0)}</div>
+            <div className="text-2xl font-bold">${(data.summary.averageOrderValue || 0).toFixed(0)}</div>
             <p className="text-xs text-purple-600 flex items-center mt-1">
               <ArrowUpRight className="h-3 w-3 mr-1" />
               +3.7% from last period
@@ -217,7 +217,7 @@ export default function SalesAnalyticsDashboard({ filters }: { filters?: any }) 
             <Users className="h-4 w-4 text-orange-600" />
           </CardHeader>
           <CardContent>
-            <div className="text-2xl font-bold">{data.summary.totalCustomers.toLocaleString()}</div>
+            <div className="text-2xl font-bold">{(data.summary.totalCustomers || 0).toLocaleString()}</div>
             <p className="text-xs text-orange-600 flex items-center mt-1">
               <ArrowUpRight className="h-3 w-3 mr-1" />
               +15.3% from last period
@@ -339,7 +339,7 @@ export default function SalesAnalyticsDashboard({ filters }: { filters?: any }) 
                 <div key={index} className="p-3 border rounded-lg">
                   <div className="flex justify-between items-start mb-2">
                     <h4 className="font-medium">{segment.segment}</h4>
-                    <Badge variant="outline">{segment.customers.toLocaleString()} customers</Badge>
+                    <Badge variant="outline">{(segment.customers || 0).toLocaleString()} customers</Badge>
                   </div>
                   <div className="space-y-1">
                     <div className="flex justify-between text-sm">
@@ -348,7 +348,7 @@ export default function SalesAnalyticsDashboard({ filters }: { filters?: any }) 
                     </div>
                     <div className="flex justify-between text-sm">
                       <span className="text-gray-600">Avg Order:</span>
-                      <span className="font-medium">${segment.avgOrderValue.toFixed(0)}</span>
+                      <span className="font-medium">${(segment.avgOrderValue || 0).toFixed(0)}</span>
                     </div>
                   </div>
                 </div>

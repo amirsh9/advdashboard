@@ -148,9 +148,9 @@ export async function GET(request: Request) {
     // Get customer segments
     const customerSegmentsQuery = `
       SELECT
-        CASE 
-          WHEN c.CustomerType = 'I' THEN 'Individual'
-          WHEN c.CustomerType = 'S' THEN 'Store'
+        CASE
+          WHEN c.PersonID IS NOT NULL THEN 'Individual'
+          WHEN c.StoreID IS NOT NULL THEN 'Store'
           ELSE 'Other'
         END AS Segment,
         COUNT(DISTINCT c.CustomerID) AS Customers,
@@ -160,10 +160,10 @@ export async function GET(request: Request) {
       JOIN Sales.SalesOrderHeader soh ON c.CustomerID = soh.CustomerID
       WHERE soh.Status IN (1, 2, 3, 4)
         ${dateCondition}
-      GROUP BY 
-        CASE 
-          WHEN c.CustomerType = 'I' THEN 'Individual'
-          WHEN c.CustomerType = 'S' THEN 'Store'
+      GROUP BY
+        CASE
+          WHEN c.PersonID IS NOT NULL THEN 'Individual'
+          WHEN c.StoreID IS NOT NULL THEN 'Store'
           ELSE 'Other'
         END
       ORDER BY Revenue DESC
