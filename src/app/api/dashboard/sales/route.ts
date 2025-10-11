@@ -5,6 +5,11 @@ export async function GET(request: Request) {
   try {
     const { searchParams } = new URL(request.url);
     const dateRange = searchParams.get('dateRange') || '2014';
+    const territory = searchParams.get('territory') || 'all';
+    const status = searchParams.get('status') || 'all';
+    const category = searchParams.get('category') || 'all';
+    
+    console.log('API called with filters:', { dateRange, territory, status, category });
     
     // Build date filter condition
     let dateCondition = '';
@@ -20,6 +25,20 @@ export async function GET(request: Request) {
       }
     }
     
+    // Build additional filter conditions
+    let territoryCondition = '';
+    if (territory !== 'all') {
+      if (territory === 'north-america') {
+        territoryCondition = "AND st.CountryRegionCode IN ('US', 'CA')";
+      } else if (territory === 'europe') {
+        territoryCondition = "AND st.CountryRegionCode IN ('GB', 'DE', 'FR')";
+      } else if (territory === 'asia') {
+        territoryCondition = "AND st.CountryRegionCode IN ('JP', 'CN', 'IN')";
+      } else if (territory === 'south-america') {
+        territoryCondition = "AND st.CountryRegionCode IN ('BR', 'AR')";
+      }
+    }
+    
     // Get sales summary metrics
     const salesSummaryQuery = `
       SELECT
@@ -31,8 +50,10 @@ export async function GET(request: Request) {
         COUNT(DISTINCT CustomerID) AS TotalCustomers,
         COUNT(DISTINCT SalesPersonID) AS TotalSalesPeople
       FROM Sales.SalesOrderHeader soh
+      LEFT JOIN Sales.SalesTerritory st ON soh.TerritoryID = st.TerritoryID
       WHERE soh.Status IN (1, 2, 3, 4) -- Active orders
       ${dateCondition}
+      ${territoryCondition}
     `;
     const salesSummary = await executeQuery(salesSummaryQuery);
     
@@ -47,7 +68,9 @@ export async function GET(request: Request) {
           SUM(SubTotal) AS Revenue,
           AVG(SubTotal) AS AverageOrderValue
         FROM Sales.SalesOrderHeader soh
+        LEFT JOIN Sales.SalesTerritory st ON soh.TerritoryID = st.TerritoryID
         WHERE soh.Status IN (1, 2, 3, 4)
+        ${territoryCondition}
         GROUP BY YEAR(soh.OrderDate), MONTH(soh.OrderDate)
         ORDER BY Year, Month
       `;
@@ -60,8 +83,10 @@ export async function GET(request: Request) {
           SUM(soh.SubTotal) AS Revenue,
           AVG(soh.SubTotal) AS AverageOrderValue
         FROM Sales.SalesOrderHeader soh
+        LEFT JOIN Sales.SalesTerritory st ON soh.TerritoryID = st.TerritoryID
         WHERE soh.Status IN (1, 2, 3, 4)
         ${dateCondition}
+        ${territoryCondition}
         GROUP BY YEAR(soh.OrderDate), MONTH(soh.OrderDate)
         ORDER BY Year, Month
       `;
@@ -80,8 +105,10 @@ export async function GET(request: Request) {
       FROM Sales.Customer c
       JOIN Sales.SalesOrderHeader soh ON c.CustomerID = soh.CustomerID
       JOIN Person.Person p ON c.PersonID = p.BusinessEntityID
+      LEFT JOIN Sales.SalesTerritory st ON soh.TerritoryID = st.TerritoryID
       WHERE soh.Status IN (1, 2, 3, 4)
       ${dateCondition}
+      ${territoryCondition}
       GROUP BY c.CustomerID, c.AccountNumber, p.FirstName, p.LastName
       ORDER BY TotalSpent DESC
     `;
@@ -100,8 +127,10 @@ export async function GET(request: Request) {
       FROM Production.Product p
       JOIN Sales.SalesOrderDetail sod ON p.ProductID = sod.ProductID
       JOIN Sales.SalesOrderHeader soh ON sod.SalesOrderID = soh.SalesOrderID
+      LEFT JOIN Sales.SalesTerritory st ON soh.TerritoryID = st.TerritoryID
       WHERE soh.Status IN (1, 2, 3, 4)
       ${dateCondition}
+      ${territoryCondition}
       GROUP BY p.ProductID, p.Name, p.ProductNumber
       ORDER BY TotalRevenue DESC
     `;
@@ -121,6 +150,7 @@ export async function GET(request: Request) {
       JOIN Sales.SalesOrderHeader soh ON st.TerritoryID = soh.TerritoryID
       WHERE soh.Status IN (1, 2, 3, 4)
       ${dateCondition}
+      ${territoryCondition}
       GROUP BY st.TerritoryID, st.Name, st.CountryRegionCode, st.[Group]
       ORDER BY TotalRevenue DESC
     `;
@@ -147,6 +177,7 @@ export async function GET(request: Request) {
       LEFT JOIN Sales.SalesTerritory st ON soh.TerritoryID = st.TerritoryID
       WHERE soh.Status IN (1, 2, 3, 4)
       ${dateCondition}
+      ${territoryCondition}
       ORDER BY soh.OrderDate DESC
     `;
     const recentOrders = await executeQuery(recentOrdersQuery);

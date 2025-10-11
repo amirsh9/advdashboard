@@ -101,6 +101,15 @@ export default function SalesDashboard({ filters }: { filters?: any }) {
         if (filterParams.dateRange && filterParams.dateRange !== 'all') {
           queryParams.append('dateRange', filterParams.dateRange);
         }
+        if (filterParams.territory && filterParams.territory !== 'all') {
+          queryParams.append('territory', filterParams.territory);
+        }
+        if (filterParams.status && filterParams.status !== 'all') {
+          queryParams.append('status', filterParams.status);
+        }
+        if (filterParams.category && filterParams.category !== 'all') {
+          queryParams.append('category', filterParams.category);
+        }
       }
       
       const url = queryParams.toString()

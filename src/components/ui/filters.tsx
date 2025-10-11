@@ -32,37 +32,41 @@ interface FilterProps {
 }
 
 export function DashboardFilters({ onFiltersChange, dashboardType, initialFilters }: FilterProps) {
-  const [isExpanded, setIsExpanded] = useState(false)
-  const [activeFilters, setActiveFilters] = useState({
+  const [isExpanded, setIsExpanded] = useState(true)
+  
+  const defaultFilters = {
     dateRange: '2014',
     department: 'all',
     territory: 'all',
     category: 'all',
     vendor: 'all',
-    status: 'all',
+    status: 'all'
+  }
+  
+  const [activeFilters, setActiveFilters] = useState({
+    ...defaultFilters,
     ...initialFilters
   })
   const [tempFilters, setTempFilters] = useState({
-    dateRange: '2014',
-    department: 'all',
-    territory: 'all',
-    category: 'all',
-    vendor: 'all',
-    status: 'all',
+    ...defaultFilters,
     ...initialFilters
   })
   
   // Update tempFilters when initialFilters change
   useEffect(() => {
     if (initialFilters) {
-      setTempFilters(prev => ({ ...prev, ...initialFilters }))
-      setActiveFilters(prev => ({ ...prev, ...initialFilters }))
+      const newFilters = { ...defaultFilters, ...initialFilters }
+      setTempFilters(newFilters)
+      setActiveFilters(newFilters)
     }
   }, [initialFilters])
 
   const handleFilterChange = (key: string, value: string) => {
     const newFilters = { ...tempFilters, [key]: value }
     setTempFilters(newFilters)
+    // Apply filters automatically when changed
+    setActiveFilters(newFilters)
+    onFiltersChange(newFilters)
   }
 
   const applyFilters = () => {
